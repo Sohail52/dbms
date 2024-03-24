@@ -147,60 +147,53 @@ WHERE USN = '1BI15CS101';
 
 SELECT * FROM STUDENT_TEST1_MARKS_V;
 
-CREATE PROCEDURE AVG_MARKS()
-BEGIN
-DECLARE C_A INTEGER;
-DECLARE C_B INTEGER;
-DECLARE C_C INTEGER;
-DECLARE C_SUM INTEGER;
-DECLARE C_AVG INTEGER;
-DECLARE C_USN VARCHAR(10);
-DECLARE C_SUBCODE VARCHAR(8);
-DECLARE C_SSID VARCHAR(5);
+CREATE VIEW best_two_finder AS
+SELECT usn,subcode,
+    CASE
+        WHEN test1 >= test2 AND test1 >= test3 THEN test1
+        WHEN test2 >= test1 AND test2 >= test3 THEN test2
+        ELSE test3
+    END AS highest,
+    CASE
+        WHEN (test1 >= test2 AND test1 <= test3) OR (test1 <= test2 AND test1 >= test3) THEN test1
+        WHEN (test2 >= test1 AND test2 <= test3) OR (test2 <= test1 AND test2 >= test3) THEN test2
+        ELSE test3
+    END AS secondhighest
+FROM 
+    IAmarks;
 
-DECLARE C_IAMARKS CURSOR FOR
-SELECT GREATEST(TEST1,TEST2) AS A, GREATEST(TEST1,TEST3) AS B, GREATEST(TEST3,TEST2) AS C, USN, SUBCODE, SSID
-FROM IAMARKS
-WHERE FINALIA IS NULL
-FOR UPDATE;
+create view average2 as select subcode,usn,((highest+secondhighest)/2) as final from best_two_finder;
 
-OPEN C_IAMARKS;
-LOOP
+UPDATE IAmarks
+SET finalIA = (
+    SELECT final
+    FROM average2
+    WHERE IAmarks.subcode = average2.subcode AND IAmarks.usn = average2.usn
+);
+select * from average2;
+select * from IAmarks;
 
-FETCH C_IAMARKS INTO C_A, C_B, C_C, C_USN, C_SUBCODE, C_SSID;
-
-IF (C_A != C_B) THEN
-	SET C_SUM=C_A+C_B;
-ELSE
-	SET C_SUM=C_A+C_C;
-END IF;
-
-SET C_AVG=C_SUM/2;
-
-UPDATE IAMARKS SET FINALIA = C_AVG 
-WHERE USN = C_USN AND SUBCODE = C_SUBCODE AND SSID = C_SSID;
-
-END LOOP;
-CLOSE C_IAMARKS;
-END;
-//
-
-
-CALL AVG_MARKS();
-
-SELECT * FROM IAMARKS;
-
-SELECT S.USN,S.SNAME,S.ADDRESS,S.PHONE,S.GENDER, IA.SUBCODE,
-(CASE
-WHEN IA.FINALIA BETWEEN 17 AND 20 THEN 'OUTSTANDING'
-WHEN IA.FINALIA BETWEEN 12 AND 16 THEN 'AVERAGE'
-ELSE 'WEAK'
-END) AS CAT
-FROM STUDENT S, SEMSEC SS, IAMARKS IA, SUBJECT SUB
-WHERE S.USN = IA.USN AND
-SS.SSID = IA.SSID AND
-SUB.SUBCODE = IA.SUBCODE AND
-SUB.SEM = 8;
+SELECT 
+    S.usn, 
+    S.sname, 
+    S.address, 
+    S.phone, 
+    S.gender,
+    (CASE 
+        WHEN IA.finalIA BETWEEN 17 AND 20 THEN 'OUTSTANDING'
+        WHEN IA.finalIA BETWEEN 12 AND 16 THEN 'AVERAGE'
+        ELSE 'WEAK'
+     END) AS CAT
+FROM 
+    student S
+INNER JOIN 
+    IAmarks IA ON S.usn= IA.usn
+INNER JOIN 
+    semsec SS ON SS.ssid = IA.ssid
+INNER JOIN 
+    subject SUB ON SUB.subcode = IA.subcode
+WHERE 
+    SUB.sem = 7;
 -------------------------------------------------------------------------------------------
  CREATE TABLE DEPARTMENT 
 (DNO VARCHAR2 (20) PRIMARY KEY, 
