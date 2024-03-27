@@ -1,354 +1,329 @@
-CREATE TABLE STUDENT ( 
-USN VARCHAR (10) PRIMARY KEY, 
-SNAME VARCHAR (25), 
-ADDRESS VARCHAR (25), 
-PHONE NUMBER (10), 
-GENDER CHAR (1)); 
-CREATE TABLE SEMSEC ( 
-SSID VARCHAR (5) PRIMARY KEY, 
-SEM NUMBER (2), 
-SEC CHAR (1)); 
-CREATE TABLE CLASS 
-( USN VARCHAR (10), 
-SSID VARCHAR (5), 
-PRIMARY KEY (USN, 
-SSID), 
-FOREIGN KEY (USN) REFERENCES STUDENT (USN), 
-FOREIGN KEY (SSID) REFERENCES SEMSEC (SSID));
-CREATE TABLE SUBJECT 
-( SUBCODE VARCHAR (8), 
-TITLE VARCHAR (20), 
-SEM NUMBER (2), 
-CREDITS NUMBER (2), 
-PRIMARY KEY 
-(SUBCODE)); 
-CREATE TABLE IAMARKS ( 
-USN VARCHAR (10), 
-SUBCODE VARCHAR (8), 
-SSID VARCHAR (5), 
-TEST1 NUMBER (2), 
-TEST2 NUMBER (2), 
-TEST3 NUMBER (2), 
-FINALIA NUMBER (2), 
-PRIMARY KEY (USN, SUBCODE, SSID), 
-FOREIGN KEY (USN) REFERENCES STUDENT (USN), 
-FOREIGN KEY (SUBCODE) REFERENCES SUBJECT (SUBCODE), 
-FOREIGN KEY (SSID) REFERENCES SEMSEC (SSID));
+!DOCTYPE html> 
+<html ng-app="dateApp"> 
+<head> 
+    <title>Date Display Application</title> 
+    <script 
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"
+ ></script> 
+</head> 
+<body ng-controller="dateController"> 
+ 
+    <h2>Date Display</h2> 
 
-INSERT INTO STUDENT VALUES ('1BI13CS020','ANAND','BELAGAVI', 1233423,'M');
-INSERT INTO STUDENT VALUES ('1BI13CS062','BABIITHA','BENGALURU',43123,'F');
-INSERT INTO STUDENT VALUES ('1BI15CS101','CHETHAN','BENGALURU', 534234,'M');
-INSERT INTO STUDENT VALUES ('1BI13CS066','DIVYA','MANGALURU',534432,'F');
-INSERT INTO STUDENT VALUES ('1BI14CS010','EESHA','BENGALURU', 345456,'F');
-INSERT INTO STUDENT VALUES ('1BI14CS032','GANESH','BENGALURU',574532,'M');
-INSERT INTO STUDENT VALUES ('1BI14CS025','HARISH','BENGALURU', 235464,'M');
-INSERT INTO STUDENT VALUES ('1BI15CS011','ISHA','TUMKUR', 764343,'F');
-INSERT INTO STUDENT VALUES ('1BI15CS029','JOEY','DAVANGERE', 235653,'M');
-INSERT INTO STUDENT VALUES ('1BI15CS045','KAVYA','BELLARY', 865434,'F');
-INSERT INTO STUDENT VALUES ('1BI15CS091','MALINI','MANGALURU',235464,'F');
-INSERT INTO STUDENT VALUES ('1BI16CS045','NEEL','KALBURGI', 856453,'M');
-INSERT INTO STUDENT VALUES ('1BI16CS088','PARTHA','SHIMOGA', 234546,'M');
-INSERT INTO STUDENT VALUES ('1BI16CS122','REEMA','CHIKAMAGALUR', 853333,'F');
+    <p>Default Format: {{ currentDate | date }}</p> 
+    <p>Custom Format (yyyy-MM-dd): {{ currentDate | date:'yyyy-MM-dd' 
+}}</p> 
+    <p>Short Date: {{ currentDate | date:'shortDate' }}</p> 
+    <p>Full Date: {{ currentDate | date:'fullDate' }}</p> 
+    <script> 
+        var app = angular.module('dateApp', []); 
+ 
+        app.controller('dateController', function ($scope) { 
+            $scope.currentDate = new Date(); 
+        }); 
+    </script> 
+</body> 
+</html>
+----------------------------------------------------------------
+!DOCTYPE html> 
+<html ng-app="studentApp"> 
+<head> 
+    <title>Student Name Converter</title> 
+    <script 
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"
+ ></script> 
+</head> 
+ 
+<body ng-controller="studentController"> 
+    <h2>Student Names</h2> 
+    <!-- Display the original student names --> 
+    <h3>Original Names:</h3> 
+    <ul> 
+        <li ng-repeat="name in names"> 
+            {{ name }} 
+        </li> 
+    </ul> 
+    <!-- Display the student names in uppercase using filters --> 
+    <h3>Names in Uppercase:</h3> 
+    <ul> 
+        <li ng-repeat="name in names"> 
+            {{ name | uppercase }} 
+        </li> 
+    </ul> 
+    <script> 
+        var app = angular.module('studentApp', []); 
+ 
+        app.controller('studentController', function ($scope) { 
+            $scope.names = ['Mani', 'Ram', 'Sam']; 
+        }); 
+    </script> 
+</body> 
+</html>
+_-------------------------------------------------------------------
+<!DOCTYPE html> 
+<html ng-app="itemApp"> 
+ 
+<head> 
+    <script 
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"
+ ></script> 
+</head> 
+ 
+<body ng-controller="itemController"> 
+    <h2>Item Collection</h2> 
+ 
+    Add New Item: 
+    <input type="text" ng-model="newItem" /> 
+ 
+    <button ng-click="addItem()">Add Item</button> 
+ 
+    <ul> 
+        <li ng-repeat="item in items track by $index"> 
+            {{ item }} 
+            <button ng-click="removeItem($index)">Remove</button> 
+        </li> 
+    </ul> 
+ 
+    <p>Total Items: {{ items.length }}</p> 
+ 
+    <script> 
+        var app = angular.module('itemApp', []); 
+ 
+        app.controller('itemController', function ($scope) { 
+            $scope.items = ['Item 1', 'Item 2', 'Item 3']; // Default 
+items 
+            $scope.newItem = ''; 
+ 
+            $scope.addItem = function () { 
+                if ($scope.newItem) { 
+                    $scope.items.push($scope.newItem); 
+$scope.newItem = ''; // Clear the input field 
+} 
+}; 
+$scope.removeItem = function (index) { 
+$scope.items.splice(index, 1); 
+}; 
+}); 
+</script> 
+</body> 
+</html>
+----------------------------------------------------------------------------
+<!DOCTYPE html> 
+<html ng-app="employeeApp"> 
+ 
+<head> 
+    <title>AngularJS Employee Search</title> 
+    <script 
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"
+ ></script> 
+</head> 
+ 
+<body ng-controller="employeeController"> 
+    <h2>Employee List</h2> 
+ 
+    Search by Name: 
+    <input type="text" ng-model="searchName" /> 
+ 
+    Search by Salary: 
+    <input type="number" ng-model="searchSalary" /> 
+ 
+    <ul> 
+        <li ng-repeat="employee in employees | filter: {name: searchName, 
+salary: searchSalary}"> 
+            {{ employee.name }} - Salary: Rs {{ employee.salary }} 
+        </li> 
+    </ul> 
+ 
+    <script> 
+        var app = angular.module('employeeApp', []); 
+ 
+        app.controller('employeeController', function ($scope) { 
+            $scope.employees = [ 
+                { name: 'Ram', salary: 50000 }, 
+                { name: 'Abi', salary: 60000 }, 
+                { name: 'Sam', salary: 75000 }, 
+                { name: 'Raj', salary: 55000 } 
+            ]; 
+ 
+$scope.searchName = ''; 
+$scope.searchSalary = ''; 
+}); 
+</script> 
+</body> 
+</html>
+---------------------------------------------------
+<!DOCTYPE html> 
+<html ng-app="loginApp"> 
+ 
+<head> 
+    <script 
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"
+ ></script> 
+</head> 
+ 
+<body ng-controller="loginController"> 
+    <h1>Login Form</h1> 
+ 
+    <!-- Form for login with validation --> 
+    <form ng-submit="login()"> 
+        Username<br> 
+        <input type="text" ng-model="username" required> 
+        <br> Password <br> 
+        <input type="password" ng-model="password" required> 
+        <br> 
+        <button type="submit">Login</button> 
+    </form> 
+ 
+    <script> 
+        var app = angular.module('loginApp', []); 
+ 
+        app.controller('loginController', function ($scope) { 
+            $scope.login = function () { 
+                // Check if username is "ram" and password is "ram" 
+                if ($scope.username.toLowerCase() === 'viraj' && 
+$scope.password === '123') { 
+                    alert('Login successful'); 
+                    // Add further logic for successful login 
+                } else { 
+                    alert('Login failed. Invalid username or password.'); 
+                    // Add logic for failed login 
+                } 
+            }; 
+        }); 
+</script> 
+</body> 
+</html>
+-------------------------------------------------------------------------
+<!DOCTYPE html> 
+<html ng-app="crudApp"> 
+ 
+<head> 
+    <title>AngularJS CRUD Application</title> 
+    <script 
+src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"
+ ></script> 
+</head> 
+ 
+<body ng-controller="crudController"> 
+    <h1>User Management</h1> 
+ 
+    <!-- Form for adding a new user --> 
+    <form ng-submit="addUser()"> 
+        Name: 
+        <input type="text" ng-model="name" required> 
+        <br> Age: 
+        <input type="number" ng-model="age" required> 
+        <br> 
+        <button type="submit">Add User</button> 
+    </form> 
+    <br> 
+ 
+    <!-- Table to display user information --> 
+    <table> 
+        <thead> 
+            <tr> 
+                <th>Name</th> 
+                <th>Age</th> 
+                <th>Action</th> 
+            </tr> 
+        </thead> 
+        <tbody> 
+            <tr ng-repeat="user in users"> 
+                <td>{{ user.name }}</td> 
+                <td>{{ user.age }}</td> 
+                <td> 
+                    <button ng-click="editUser(user)">Edit</button> 
+                    <button ng-click="deleteUser(user)">Delete</button> 
+                </td> 
+            </tr> 
+        </tbody> 
+    </table> 
+ 
+    <script> 
+        var app = angular.module('crudApp', []); 
+ 
+        app.controller('crudController', function ($scope) { 
+            $scope.users = [ 
+                { name: 'Ram', age: 25 }, 
+                { name: 'Sam', age: 30 }, 
+            ]; 
+ 
+            $scope.addUser = function () { 
+                $scope.users.push({ name: $scope.name, age: $scope.age }); 
+                $scope.name = ''; 
+                $scope.age = ''; 
+            }; 
+ 
+            $scope.editUser = function (user) { 
+                var index = $scope.users.indexOf(user); 
+ 
+                // Prompt for updated values with validation 
+                var updatedName = prompt('Enter updated name:', 
+user.name); 
+                var updatedAge = prompt('Enter updated age:', user.age); 
+ 
+                // Check if the user pressed cancel 
+                if (updatedName !== null && updatedAge !== null) { 
+                    // Update the user 
+                    var updatedUser = { name: updatedName, age: 
+parseInt(updatedAge) }; 
+                    $scope.users.splice(index, 1, updatedUser); 
+                } 
+            }; 
+ 
+            $scope.deleteUser = function (user) { 
+                var index = $scope.users.indexOf(user); 
+                $scope.users.splice(index, 1); 
+            }; 
+        }); 
+    </script> 
+</body> 
+ 
+</html>
+---------------------------------------------------------------
+<!DOCTYPE html>
+<html ng-app="todoapp">
 
-INSERT INTO SEMSEC VALUES ('CSE8A', 8,'A');
-INSERT INTO SEMSEC VALUES ('CSE8B', 8,'B');
-INSERT INTO SEMSEC VALUES ('CSE8C', 8,'C');
-INSERT INTO SEMSEC VALUES ('CSE7A', 7,'A');
-INSERT INTO SEMSEC VALUES ('CSE7B', 7,'B');
-INSERT INTO SEMSEC VALUES ('CSE7C', 7,'C');
-INSERT INTO SEMSEC VALUES ('CSE6A', 6,'A');
-INSERT INTO SEMSEC VALUES ('CSE6B', 6,'B');
-INSERT INTO SEMSEC VALUES ('CSE6C', 6,'C');
-INSERT INTO SEMSEC VALUES ('CSE5A', 5,'A');
-INSERT INTO SEMSEC VALUES ('CSE5B', 5,'B');
-INSERT INTO SEMSEC VALUES ('CSE5C', 5,'C');
-INSERT INTO SEMSEC VALUES ('CSE4A', 4,'A');
-INSERT INTO SEMSEC VALUES ('CSE4B', 4,'B');
-INSERT INTO SEMSEC VALUES ('CSE4C', 4,'C');
-INSERT INTO SEMSEC VALUES ('CSE3A', 3,'A');
-INSERT INTO SEMSEC VALUES ('CSE3B', 3,'B');
-INSERT INTO SEMSEC VALUES ('CSE3C', 3,'C');
-INSERT INTO SEMSEC VALUES ('CSE2A', 2,'A');
-INSERT INTO SEMSEC VALUES ('CSE2B', 2,'B');
-INSERT INTO SEMSEC VALUES ('CSE2C', 2,'C');
-INSERT INTO SEMSEC VALUES ('CSE1A', 1,'A');
-INSERT INTO SEMSEC VALUES ('CSE1B', 1,'B');
-INSERT INTO SEMSEC VALUES ('CSE1C', 1,'C');
+<head>
+    <title>todo Application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js">
+    </script>
 
-INSERT INTO CLASS VALUES ('1BI13CS020','CSE8A');
-INSERT INTO CLASS VALUES ('1BI13CS062','CSE8A');
-INSERT INTO CLASS VALUES ('1BI13CS066','CSE8B');
-INSERT INTO CLASS VALUES ('1BI15CS101','CSE8C');
-INSERT INTO CLASS VALUES ('1BI14CS010','CSE7A');
-INSERT INTO CLASS VALUES ('1BI14CS025','CSE7A');
-INSERT INTO CLASS VALUES ('1BI14CS032','CSE7A');
-INSERT INTO CLASS VALUES ('1BI15CS011','CSE4A');
-INSERT INTO CLASS VALUES ('1BI15CS029','CSE4A');
-INSERT INTO CLASS VALUES ('1BI15CS045','CSE4B');
-INSERT INTO CLASS VALUES ('1BI15CS091','CSE4C');
-INSERT INTO CLASS VALUES ('1BI16CS045','CSE3A');
-INSERT INTO CLASS VALUES ('1BI16CS088','CSE3B');
-INSERT INTO CLASS VALUES ('1BI16CS122','CSE3C');
+<body ng-controller="todoctrl">
+    <h2>login form</h2>
+    <form ng-submit="addtask()">
+        add task <br><input type="text" ng-model="newtask" /><br>
+        <button type="submit">add task</button>
+    </form>
 
-INSERT INTO SUBJECT VALUES ('10CS81','ACA', 8, 4);
-INSERT INTO SUBJECT VALUES ('10CS82','SSM', 8, 4);
-INSERT INTO SUBJECT VALUES ('10CS83','NM', 8, 4);
-INSERT INTO SUBJECT VALUES ('10CS84','CC', 8, 4);
-INSERT INTO SUBJECT VALUES ('10CS85','PW', 8, 4);
-INSERT INTO SUBJECT VALUES ('10CS71','OOAD', 7, 4);
-INSERT INTO SUBJECT VALUES ('10CS72','ECS', 7, 4);
-INSERT INTO SUBJECT VALUES ('10CS73','PTW', 7, 4);
-INSERT INTO SUBJECT VALUES ('10CS74','DWDM', 7, 4);
-INSERT INTO SUBJECT VALUES ('10CS75','JAVA', 7, 4);
-INSERT INTO SUBJECT VALUES ('10CS76','SAN', 7, 4);
-INSERT INTO SUBJECT VALUES ('15CS51','ME', 5, 4);
-INSERT INTO SUBJECT VALUES ('15CS52','CN', 5, 4);
-INSERT INTO SUBJECT VALUES ('15CS53','DBMS', 5, 4);
-INSERT INTO SUBJECT VALUES ('15CS54','ATC', 5, 4);
-INSERT INTO SUBJECT VALUES ('15CS55','JAVA', 5, 3);
-INSERT INTO SUBJECT VALUES ('15CS56','AI', 5, 3);
-INSERT INTO SUBJECT VALUES ('15CS41','M4', 4, 4);
-INSERT INTO SUBJECT VALUES ('15CS42','SE', 4, 4);
-INSERT INTO SUBJECT VALUES ('15CS43','DAA', 4, 4);
-INSERT INTO SUBJECT VALUES ('15CS44','MPMC', 4, 4);
-INSERT INTO SUBJECT VALUES ('15CS45','OOC', 4, 3);
-INSERT INTO SUBJECT VALUES ('15CS46','DC', 4, 3);
-INSERT INTO SUBJECT VALUES ('15CS31','M3', 3, 4);
-INSERT INTO SUBJECT VALUES ('15CS32','ADE', 3, 4);
-INSERT INTO SUBJECT VALUES ('15CS33','DSA', 3, 4);
-INSERT INTO SUBJECT VALUES ('15CS34','CO', 3, 4);
-INSERT INTO SUBJECT VALUES ('15CS35','USP', 3, 3);
-INSERT INTO SUBJECT VALUES ('15CS36','DMS', 3, 3);
-
-INSERT INTO IAMARKS (USN, SUBCODE, SSID, TEST1, TEST2, TEST3) VALUES ('1BI15CS101','10CS81','CSE8C', 15, 16, 18);
-INSERT INTO IAMARKS (USN, SUBCODE, SSID, TEST1, TEST2, TEST3) VALUES ('1BI15CS101','10CS82','CSE8C', 12, 19, 14);
-INSERT INTO IAMARKS (USN, SUBCODE, SSID, TEST1, TEST2, TEST3) VALUES ('1BI15CS101','10CS83','CSE8C', 19, 15, 20);
-INSERT INTO IAMARKS (USN, SUBCODE, SSID, TEST1, TEST2, TEST3) VALUES ('1BI15CS101','10CS84','CSE8C', 20, 16, 19);
-INSERT INTO IAMARKS (USN, SUBCODE, SSID, TEST1, TEST2, TEST3) VALUES ('1BI15CS101','10CS85','CSE8C', 15, 15, 12);
-
-SELECT S.*, SS.SEM, SS.SEC
-FROM STUDENT S, SEMSEC SS, CLASS C
-WHERE S.USN = C.USN AND
-SS.SSID = C.SSID AND
-SS.SEM = 4 AND SS.SEC='C';
-
-SELECT SS.SEM, SS.SEC, S.GENDER, COUNT(S.GENDER) AS COUNT
-FROM STUDENT S, SEMSEC SS, CLASS C
-WHERE S.USN = C.USN AND
-SS.SSID = C.SSID
-GROUP BY SS.SEM, SS.SEC, S.GENDER
-ORDER BY SEM;
-
-CREATE VIEW STUDENT_TEST1_MARKS_V
-AS
-SELECT TEST1, SUBCODE
-FROM IAMARKS
-WHERE USN = '1BI15CS101';
-
-SELECT * FROM STUDENT_TEST1_MARKS_V;
-
-CREATE VIEW best_two_finder AS
-SELECT usn,subcode,
-    CASE
-        WHEN test1 >= test2 AND test1 >= test3 THEN test1
-        WHEN test2 >= test1 AND test2 >= test3 THEN test2
-        ELSE test3
-    END AS highest,
-    CASE
-        WHEN (test1 >= test2 AND test1 <= test3) OR (test1 <= test2 AND test1 >= test3) THEN test1
-        WHEN (test2 >= test1 AND test2 <= test3) OR (test2 <= test1 AND test2 >= test3) THEN test2
-        ELSE test3
-    END AS secondhighest
-FROM 
-    IAmarks;
-
-create view average2 as select subcode,usn,((highest+secondhighest)/2) as final from best_two_finder;
-
-UPDATE IAmarks
-SET finalIA = (
-    SELECT final
-    FROM average2
-    WHERE IAmarks.subcode = average2.subcode AND IAmarks.usn = average2.usn
-);
-select * from average2;
-select * from IAmarks;
-
-SELECT 
-    S.usn, 
-    S.sname, 
-    S.address, 
-    S.phone, 
-    S.gender,
-    (CASE 
-        WHEN IA.finalIA BETWEEN 17 AND 20 THEN 'OUTSTANDING'
-        WHEN IA.finalIA BETWEEN 12 AND 16 THEN 'AVERAGE'
-        ELSE 'WEAK'
-     END) AS CAT
-FROM 
-    student S
-INNER JOIN 
-    IAmarks IA ON S.usn= IA.usn
-INNER JOIN 
-    semsec SS ON SS.ssid = IA.ssid
-INNER JOIN 
-    subject SUB ON SUB.subcode = IA.subcode
-WHERE 
-    SUB.sem = 7;
--------------------------------------------------------------------------------------------
- CREATE TABLE DEPARTMENT 
-(DNO VARCHAR2 (20) PRIMARY KEY, 
-DNAME VARCHAR2 (20), 
-MGRSTARTDATE DATE); 
-CREATE TABLE EMPLOYEE 
-(SSN VARCHAR2 (20) PRIMARY KEY, 
-FNAME VARCHAR2 (20), 
-LNAME VARCHAR2 (20), 
-ADDRESS VARCHAR2 (20), 
-SEX CHAR (1), 
-SALARY INTEGER, 
-SUPERSSN REFERENCES EMPLOYEE (SSN), 
-DNO REFERENCES DEPARTMENT (DNO));
-ALTER TABLE DEPARTMENT 
-ADD MGRSSN REFERENCES EMPLOYEE (SSN); 
-CREATE TABLE DLOCATION 
-(DLOC VARCHAR2 (20), 
-DNO REFERENCES DEPARTMENT (DNO), 
-PRIMARY KEY (DNO, DLOC)); 
-CREATE TABLE PROJECT 
-(PNO INTEGER PRIMARY KEY, 
-PNAME VARCHAR2 (20), 
-PLOCATION VARCHAR2 (20), 
-DNO REFERENCES DEPARTMENT (DNO)); 
-CREATE TABLE WORKS_ON 
-(HOURS NUMBER (2), 
-SSN REFERENCES EMPLOYEE (SSN), 
-PNO REFERENCES PROJECT(PNO), 
-PRIMARY KEY (SSN, PNO)); 
- INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSECE01’,’JOHN’,’SCOTT’,’BANGALORE’,’M’, 450000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSCSE01’,’JAMES’,’SMITH’,’BANGALORE’,’M’, 500000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSCSE02’,’HEARN’,’BAKER’,’BANGALORE’,’M’, 700000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSCSE03’,’EDWARD’,’SCOTT’,’MYSORE’,’M’, 500000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSCSE04’,’PAVAN’,’HEGDE’,’MANGALORE’,’M’, 650000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSCSE05’,’GIRISH’,’MALYA’,’MYSORE’,’M’, 450000);
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSCSE06’,’NEHA’,’SN’,’BANGALORE’,’F’, 800000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSACC01’,’AHANA’,’K’,’MANGALORE’,’F’, 350000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSACC02’,’SANTHOSH’,’KUMAR’,’MANGALORE’,’M’, 300000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSISE01’,’VEENA’,’M’,’MYSORE’,’M’, 600000); 
-INSERT INTO EMPLOYEE (SSN, FNAME, LNAME, ADDRESS, SEX, SALARY) VALUES 
-(‘RNSIT01’,’NAGESH’,’HR’,’BANGALORE’,’M’, 500000); 
-INSERT INTO DEPARTMENT VALUES (‘1’,’ACCOUNTS’,’01-JAN-01’,’RNSACC02’); 
-INSERT INTO DEPARTMENT VALUES (‘2’,’IT’,’01-AUG-16’,’RNSIT01’); 
-INSERT INTO DEPARTMENT VALUES (‘3’,’ECE’,’01-JUN-08’,’RNSECE01’); 
-INSERT INTO DEPARTMENT VALUES (‘4’,’ISE’,’01-AUG-15’,’RNSISE01’); 
-INSERT INTO DEPARTMENT VALUES (‘5’,’CSE’,’01-JUN-02’,’RNSCSE05’);
-UPDATE EMPLOYEE SET 
-SUPERSSN=NULL, DNO=’3’ 
-WHERE SSN=’RNSECE01’; 
-UPDATE EMPLOYEE SET 
-SUPERSSN=’RNSCSE02’, DNO=’5’ 
-WHERE SSN=’RNSCSE01’; 
-UPDATE EMPLOYEE SET 
-SUPERSSN=’RNSCSE03’, DNO=’5’ 
-WHERE SSN=’RNSCSE02’; 
-UPDATE EMPLOYEE SET 
-SUPERSSN=’RNSCSE04’, DNO=’5’ 
-WHERE SSN=’RNSCSE03’; 
-UPDATE EMPLOYEE SET 
-DNO=’5’, SUPERSSN=’RNSCSE05’ 
-WHERE SSN=’RNSCSE04’; 
-UPDATE EMPLOYEE SET 
-DNO=’5’, SUPERSSN=’RNSCSE06’ 
-WHERE SSN=’RNSCSE05’; 
-UPDATE EMPLOYEE SET 
-DNO=’5’, SUPERSSN=NULL 
-WHERE SSN=’RNSCSE06’; 
-UPDATE EMPLOYEE SET 
-DNO=’1’, SUPERSSN=’RNSACC02’ 
-WHERE SSN=’RNSACC01’; 
-UPDATE EMPLOYEE SET 
-DNO=’1’, SUPERSSN=NULL 
-WHERE SSN=’RNSACC02’; 
-UPDATE EMPLOYEE SET 
-DNO=’4’, SUPERSSN=NULL 
-WHERE SSN=’RNSISE01’; 
-UPDATE EMPLOYEE SET 
-DNO=’2’, SUPERSSN=NULL 
-WHERE SSN=’RNSIT01’; 
-INSERT INTO DLOCATION VALUES (’BANGALORE’, ‘1’); 
-INSERT INTO DLOCATION VALUES (’BANGALORE’, ‘2’); 
-INSERT INTO DLOCATION VALUES (’BANGALORE’, ‘3’); 
-INSERT INTO DLOCATION VALUES (’MANGALORE’, ‘4’); 
-INSERT INTO DLOCATION VALUES (’MANGALORE’, ‘5’); 
-INSERT INTO PROJECT VALUES (100,’IOT’,’BANGALORE’,’5’); 
-INSERT INTO PROJECT VALUES (101,’CLOUD’,’BANGALORE’,’5’); 
-INSERT INTO PROJECT VALUES (102,’BIGDATA’,’BANGALORE’,’5’); 
-INSERT INTO PROJECT VALUES (103,’SENSORS’,’BANGALORE’,’3’); 
-INSERT INTO PROJECT VALUES (104,’BANK MANAGEMENT’,’BANGALORE’,’1’); 
-INSERT INTO PROJECT VALUES (105,’SALARY MANAGEMENT’,’BANGALORE’,’1’); 
-INSERT INTO PROJECT VALUES (106,’OPENSTACK’,’BANGALORE’,’4’); 
-INSERT INTO PROJECT VALUES (107,’SMART CITY’,’BANGALORE’,’2’);
-INSERT INTO WORKS_ON VALUES (4, ‘RNSCSE01’, 100); 
-INSERT INTO WORKS_ON VALUES (6, ‘RNSCSE01’, 101); 
-INSERT INTO WORKS_ON VALUES (8, ‘RNSCSE01’, 102); 
-INSERT INTO WORKS_ON VALUES (10, ‘RNSCSE02’, 100); 
-INSERT INTO WORKS_ON VALUES (3, ‘RNSCSE04’, 100); 
-INSERT INTO WORKS_ON VALUES (4, ‘RNSCSE05’, 101); 
-INSERT INTO WORKS_ON VALUES (5, ‘RNSCSE06’, 102); 
-INSERT INTO WORKS_ON VALUES (6, ‘RNSCSE03’, 102); 
-INSERT INTO WORKS_ON VALUES (7, ‘RNSECE01’, 103); 
-INSERT INTO WORKS_ON VALUES (5, ‘RNSACC01’, 104); 
-INSERT INTO WORKS_ON VALUES (6, ‘RNSACC02’, 105); 
-INSERT INTO WORKS_ON VALUES (4, ‘RNSISE01’, 106); 
-INSERT INTO WORKS_ON VALUES (10, ‘RNSIT01’, 107);
-
-(SELECT DISTINCT P.PNO 
-FROM PROJECT P, DEPARTMENT D, EMPLOYEE E 
-WHERE E.DNO=D.DNO 
-AND D.MGRSSN=E.SSN 
-AND E.LNAME=’SCOTT’) 
-UNION 
-(SELECT DISTINCT P1.PNO 
-FROM PROJECT P1, WORKS_ON W, EMPLOYEE E1 
-WHERE P1.PNO=W.PNO 
-AND E1.SSN=W.SSN 
-AND E1.LNAME=’SCOTT’); 
-
-SELECT E.FNAME, E.LNAME, 1.1*E.SALARY AS INCR_SAL 
-FROM EMPLOYEE E, WORKS_ON W, PROJECT P 
-WHERE E.SSN=W.SSN 
-AND W.PNO=P.PNO 
-AND P.PNAME=’IOT’; 
-
-SELECT SUM (E.SALARY), MAX (E.SALARY), MIN (E.SALARY), AVG 
-(E.SALARY) 
-FROM EMPLOYEE E, DEPARTMENT D 
-WHERE E.DNO=D.DNO 
-AND D.DNAME=’ACCOUNTS’;
-
-SELECT E.NAME
-FROM EMPLOYEE E
-WHERE NOT EXISTS(SELECT PNO FROM PROJECT WHERE DNO='5' AND PNO NOT IN (SELECT
-PNO FROM WORKS_ON
-WHERE E.SSN=SSN));
-
-SELECT D.DNO, COUNT(*)
-FROM DEPARTMENT D, EMPLOYEE E
-WHERE D.DNO=E.DNO
-AND E.SALARY > 600000
-AND D.DNO IN (SELECT E1.DNO
-FROM EMPLOYEE E1
-GROUP BY E1.DNO
-HAVING COUNT(*)>5)
-GROUP BY D.DNO;
+    <div ng-repeat="task in tasks">
+        <li> {{task}} </li>
+        <button ng-click="edit($index)">edit</button>
+        <button ng-click="delete($index)">delete</button>
+    </div>
 
 
+    <script>
+        var app = angular.module('todoapp', []);
+        app.controller('todoctrl', function ($scope) {
+            $scope.tasks = ['task1', 'task2', 'task3'];
+            $scope.newtask = '';
+
+            $scope.addtask = function (index) {
+                $scope.tasks.push($scope.newtask);
+                $scope.newtask = '';
+            }
+            $scope.edit = function (index) {
+                var updatedtask = prompt('enter updated task');
+                if (updatedtask != null) {
+                    $scope.tasks.splice(index, 1, updatedtask);
+                }
+            };
+            $scope.delete = function (index) {
+                $scope.tasks.splice(index, 1);
+            }
+
+        });
+    </script>
+</body>
+</head>
